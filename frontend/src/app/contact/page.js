@@ -1,46 +1,33 @@
 'use client';
-import { useState } from 'react';
+
+import { useForm } from 'react-hook-form';
 import Header from '../components/header/page';
 import Footer from '../components/footer/page';
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting }
+  } = useForm();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     try {
       const res = await fetch('http://localhost:5000/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
       });
 
-      if (!res.ok) {
-        throw new Error('Failed to send message');
-      }
-
-      const data = await res.json();
-      alert(data.message || 'Message sent successfully!');
-      setFormData({ name: '', email: '', subject: '', message: '' }); // Reset form
+      if (!res.ok) throw new Error('Failed to send message');
+      const result = await res.json();
+      alert(result.message || 'Message sent successfully!');
+      reset();
     } catch (error) {
       alert('Error sending message.');
       console.error(error);
     }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
   };
 
   return (
@@ -59,10 +46,12 @@ export default function Contact() {
 
           <div className="mx-auto max-w-5xl mt-16">
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2">
-              {/* Contact Info - e lë të pandryshuar siç e kishe */}
+              {/* Contact Info */}
               <div className="relative isolate">
-                {/* Gradient background */}
-                <div className="absolute inset-x-0 -top-3 -z-10 transform-gpu overflow-hidden px-36 blur-3xl" aria-hidden="true">
+                <div
+                  className="absolute inset-x-0 -top-3 -z-10 transform-gpu overflow-hidden px-36 blur-3xl"
+                  aria-hidden="true"
+                >
                   <div className="mx-auto aspect-[1155/678] w-[72.1875rem] bg-gradient-to-tr from-zinc-200 to-zinc-400 opacity-30"></div>
                 </div>
 
@@ -76,23 +65,11 @@ export default function Contact() {
 
                   <dl className="mt-10 space-y-6 text-base leading-7 text-zinc-600">
                     <div className="flex gap-x-4">
-                      <dt className="flex-none">
-                        <svg className="h-7 w-6 text-zinc-900" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
-                        </svg>
-                      </dt>
-                      <dd>
-                        123 Event Street<br />
-                        New York, NY 10001<br />
-                        United States
-                      </dd>
+                      <dt className="flex-none">📍</dt>
+                      <dd>123 Event Street, New York, NY 10001</dd>
                     </div>
                     <div className="flex gap-x-4">
-                      <dt className="flex-none">
-                        <svg className="h-7 w-6 text-zinc-900" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                        </svg>
-                      </dt>
+                      <dt className="flex-none">📧</dt>
                       <dd>
                         <a href="mailto:support@eventticketing.com" className="hover:text-zinc-900">
                           support@eventticketing.com
@@ -100,13 +77,9 @@ export default function Contact() {
                       </dd>
                     </div>
                     <div className="flex gap-x-4">
-                      <dt className="flex-none">
-                        <svg className="h-7 w-6 text-zinc-900" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-                        </svg>
-                      </dt>
+                      <dt className="flex-none">📞</dt>
                       <dd>
-                        <a href="tel:+1 (555) 234-5678" className="hover:text-zinc-900">
+                        <a href="tel:+15552345678" className="hover:text-zinc-900">
                           +1 (555) 234-5678
                         </a>
                       </dd>
@@ -115,54 +88,122 @@ export default function Contact() {
 
                   <div className="mt-10">
                     <h3 className="text-lg font-semibold text-zinc-900">Follow us</h3>
-                    <ul role="list" className="mt-4 flex gap-x-6">
-                      <li><a href="#" className="text-zinc-500 hover:text-zinc-900">Twitter</a></li>
-                      <li><a href="#" className="text-zinc-500 hover:text-zinc-900">LinkedIn</a></li>
-                      <li><a href="#" className="text-zinc-500 hover:text-zinc-900">Facebook</a></li>
+                    <ul className="mt-4 flex gap-x-6">
+                      <li>
+                        <a href="#" className="text-zinc-500 hover:text-zinc-900" aria-label="Twitter">
+                          <svg
+                            className="h-6 w-6"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
+                            <path d="M8.29 20c7.547 0 11.675-6.155 11.675-11.49 0-.175 0-.349-.012-.522A8.18 8.18 0 0022 5.92a8.27 8.27 0 01-2.357.636 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.978 4.107 4.107 0 00-6.993 3.743A11.65 11.65 0 013 4.913a4.07 4.07 0 001.27 5.482 4.093 4.093 0 01-1.86-.512v.05a4.106 4.106 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                          </svg>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" className="text-zinc-500 hover:text-zinc-900" aria-label="LinkedIn">
+                          <svg
+                            className="h-6 w-6"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
+                            <path d="M16 8a6 6 0 016 6v6h-4v-6a2 2 0 00-4 0v6h-4v-6a6 6 0 016-6zM2 9h4v12H2zM4 3a2 2 0 11-0 4 2 2 0 010-4z" />
+                          </svg>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" className="text-zinc-500 hover:text-zinc-900" aria-label="Facebook">
+                          <svg
+                            className="h-6 w-6"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
+                            <path d="M22 12a10 10 0 10-11.5 9.9v-7h-2v-3h2v-2c0-1.6 1-3 3-3h2v3h-2v2h2l-1 3h-1v7A10 10 0 0022 12z" />
+                          </svg>
+                        </a>
+                      </li>
                     </ul>
                   </div>
                 </div>
               </div>
 
               {/* Contact Form */}
-              <form onSubmit={handleSubmit} className="relative isolate bg-white shadow-xl shadow-zinc-900/10 rounded-2xl p-8">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="relative isolate bg-white shadow-xl shadow-zinc-900/10 rounded-2xl p-8"
+              >
                 <div className="grid grid-cols-1 gap-6">
-                  {['name', 'email', 'subject'].map(field => (
-                    <div key={field}>
-                      <label htmlFor={field} className="block text-sm font-medium leading-6 text-zinc-900">
-                        {field.charAt(0).toUpperCase() + field.slice(1)}
-                      </label>
-                      <input
-                        type={field === 'email' ? 'email' : 'text'}
-                        id={field}
-                        name={field}
-                        value={formData[field]}
-                        onChange={handleChange}
-                        required
-                        className="mt-2 block w-full rounded-lg border-0 px-4 py-2 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-900 text-sm sm:leading-6"
-                      />
-                    </div>
-                  ))}
+                  {/* ... form inputs as before ... */}
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium leading-6 text-zinc-900">Message</label>
+                    <label htmlFor="name" className="block text-sm font-medium text-zinc-900">
+                      Name
+                    </label>
+                    <input
+                      id="name"
+                      {...register('name', { required: 'Name is required' })}
+                      className="mt-2 block w-full rounded-lg border px-4 py-2 text-sm text-zinc-900 ring-1 ring-zinc-300 focus:ring-2 focus:ring-zinc-900"
+                    />
+                    {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-zinc-900">
+                      Email
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      {...register('email', {
+                        required: 'Email is required',
+                        pattern: {
+                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                          message: 'Invalid email format',
+                        },
+                      })}
+                      className="mt-2 block w-full rounded-lg border px-4 py-2 text-sm text-zinc-900 ring-1 ring-zinc-300 focus:ring-2 focus:ring-zinc-900"
+                    />
+                    {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="subject" className="block text-sm font-medium text-zinc-900">
+                      Subject
+                    </label>
+                    <input
+                      id="subject"
+                      {...register('subject', { required: 'Subject is required' })}
+                      className="mt-2 block w-full rounded-lg border px-4 py-2 text-sm text-zinc-900 ring-1 ring-zinc-300 focus:ring-2 focus:ring-zinc-900"
+                    />
+                    {errors.subject && <p className="text-sm text-red-500">{errors.subject.message}</p>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-zinc-900">
+                      Message
+                    </label>
                     <textarea
                       id="message"
-                      name="message"
                       rows={4}
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      className="mt-2 block w-full rounded-lg border-0 px-4 py-2 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-900 text-sm sm:leading-6"
+                      {...register('message', {
+                        required: 'Message is required',
+                        minLength: { value: 10, message: 'At least 10 characters' },
+                        maxLength: { value: 1000, message: 'Max 1000 characters' },
+                      })}
+                      className="mt-2 block w-full rounded-lg border px-4 py-2 text-sm text-zinc-900 ring-1 ring-zinc-300 focus:ring-2 focus:ring-zinc-900"
                     />
+                    {errors.message && <p className="text-sm text-red-500">{errors.message.message}</p>}
                   </div>
-                  <div>
-                    <button
-                      type="submit"
-                      className="rounded-lg bg-zinc-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 w-full"
-                    >
-                      Send message
-                    </button>
-                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="rounded-lg bg-zinc-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-zinc-700 disabled:opacity-50"
+                  >
+                    {isSubmitting ? 'Sending...' : 'Send message'}
+                  </button>
                 </div>
               </form>
             </div>
