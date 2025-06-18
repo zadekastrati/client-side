@@ -7,7 +7,7 @@ export default function About() {
     {
       name: 'Zade Kastrati',
       role: 'CEO & Founder',
-      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      image: '/images/profile.jpg',
     },
     {
       name: 'Erza Koxha',
@@ -103,9 +103,11 @@ export default function About() {
               {team.map((person) => (
                 <li key={person.name} className="text-center">
                   <img
-                    className="mx-auto h-24 w-24 rounded-full"
+                    className="mx-auto h-24 w-24 rounded-full object-cover"
                     src={person.image}
                     alt={person.name}
+                    width={256}
+                    height={256}
                   />
                   <h3 className="mt-6 text-base font-semibold leading-7 tracking-tight text-zinc-900">
                     {person.name}

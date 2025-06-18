@@ -1,12 +1,11 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Your Website',
-  description: 'A modern website built with Next.js and Tailwind CSS',
-};
-
+  title: 'Event Ticketing',
+  description: 'A website for event ticketing'
+}
 export default function RootLayout({ children }) {
-  return (
+ return (
     <html lang="en">
       <body>
         {children}
