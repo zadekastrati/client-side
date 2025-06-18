@@ -4,6 +4,9 @@ import Footer from './components/footer/page';
 import Card from './components/card/page';
 import Button from './components/button/page';
 
+
+import SessionProviderWrapper from '../SessionProviderWrapper';
+
 export default function Home() {
   const featuredEvents = [
     {
@@ -27,6 +30,7 @@ export default function Home() {
   ];
 
   return (
+    <SessionProviderWrapper>
     <>
       <Header />
       <main className="min-h-screen bg-zinc-50/40">
@@ -126,5 +130,6 @@ export default function Home() {
       </main>
       <Footer />
     </>
+    </SessionProviderWrapper>
   );
 } 
