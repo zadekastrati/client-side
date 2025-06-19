@@ -87,8 +87,8 @@ export default function Card({
                   onEdit();
                 }}
                 type="button"
-                className="px-3 py-1 rounded bg-indigo-600 text-white text-sm hover:bg-indigo-500 transition"
-              >
+                className="mt-6 rounded-full bg-zinc-900 px-8 py-3 text-sm font-semibold text-white shadow-sm hover:bg-zinc-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900"
+                >
                 Edit
               </button>
             )}
@@ -99,8 +99,8 @@ export default function Card({
                   onDelete();
                 }}
                 type="button"
-                className="px-3 py-1 rounded bg-red-600 text-white text-sm hover:bg-red-500 transition"
-              >
+                className="mt-6 rounded-full bg-zinc-900 px-8 py-3 text-sm font-semibold text-white shadow-sm hover:bg-zinc-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900"
+                >
                 Delete
               </button>
             )}
