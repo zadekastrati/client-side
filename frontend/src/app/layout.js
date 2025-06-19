@@ -1,7 +1,6 @@
-// 'use client'; // needed because SessionProvider uses React hooks
-
 import './globals.css';
-import SessionProviderWrapper from './SessionProviderWrapper'; // fix the relative path
+import { Toaster } from 'react-hot-toast';
+import SessionProviderWrapper from './SessionProviderWrapper';
 
 export const metadata = {
   title: 'Your Website',
@@ -13,6 +12,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <SessionProviderWrapper>
+          <Toaster position="top-center" />
           {children}
         </SessionProviderWrapper>
       </body>
