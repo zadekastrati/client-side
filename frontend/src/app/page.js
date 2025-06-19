@@ -5,7 +5,7 @@ import Card from './components/card/page';
 import Button from './components/button/page';
 
 
-import SessionProviderWrapper from '../SessionProviderWrapper';
+import SessionProviderWrapper from './SessionProviderWrapper';
 
 export default function Home() {
   const featuredEvents = [

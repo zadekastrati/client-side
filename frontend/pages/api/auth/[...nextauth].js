@@ -7,26 +7,33 @@ import FacebookProvider from "next-auth/providers/facebook";
 export const authOptions = {
   providers: [
     CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        const res = await fetch("http://localhost:3000/api/login", {
-          method: "POST",
-          body: JSON.stringify(credentials),
-          headers: { "Content-Type": "application/json" },
-        });
-
-        const user = await res.json();
-
-        if (res.ok && user) {
-          return user;
+        name: "Credentials",
+        credentials: {
+          email: { label: "Email", type: "text" },
+          password: { label: "Password", type: "password" },
+        },
+        async authorize(credentials) {
+          try {
+            const res = await fetch("http://localhost:3000/api/auth/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(credentials),
+            });
+      
+            const user = await res.json();
+      
+            if (!res.ok || !user) {
+              console.error("Login failed:", user);
+              return null;
+            }
+      
+            return user;
+          } catch (error) {
+            console.error("Authorize error:", error.message);
+            return null;
+          }
         }
-        return null;
-      },
-    }),
+      }),      
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
