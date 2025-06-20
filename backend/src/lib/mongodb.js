@@ -1,6 +1,10 @@
 import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
 
-const uri = process.env.MONGODB_URI;
+dotenv.config({ path: '.env.local' });
+
+const uri = process.env.MONGODB_URI; // pa '.local' ketu
+
 const options = {};
 
 if (!uri) {

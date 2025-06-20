@@ -1,32 +1,41 @@
 'use client';
+import { useEffect, useState } from "react";
 import Header from './components/header/page';
 import Footer from './components/footer/page';
-import Card from './components/card/page';
-import Button from './components/button/page';
+
+
+import SessionProviderWrapper from './SessionProviderWrapper';
 
 export default function Home() {
-  const featuredEvents = [
-    {
-      title: "Summer Music Festival",
-      description: "Three days of amazing music featuring top artists",
-      image: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-      date: "July 15-17, 2024",
-      location: "Central Park, NY",
-      price: 199,
-      link: "/events/1"
-    },
-    {
-      title: "Tech Conference 2024",
-      description: "Join industry leaders in technology and innovation",
-      image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-      date: "August 20-22, 2024",
-      location: "Convention Center",
-      price: 299,
-      link: "/events/2"
-    }
-  ];
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchLatestEvents = async () => {
+      try {
+        const res = await fetch('http://localhost:5001/api/events');
+        const data = await res.json();
+        if (data.success) {
+          const sortedEvents = data.data
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .slice(0, 3);
+          setEvents(sortedEvents);
+        } else {
+          setEvents([]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch events:', err);
+        setEvents([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchLatestEvents();
+  }, []);
+  
   return (
+    <SessionProviderWrapper>
     <>
       <Header />
       <main className="min-h-screen bg-zinc-50/40">
@@ -71,60 +80,47 @@ export default function Home() {
 
           {/* Event Grid */}
           <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-12 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-            {/* Event Card 1 */}
-            <article className="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl bg-zinc-900 px-8 pb-8 pt-40 sm:pt-48 lg:pt-64">
-              <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4" alt="Event 1" className="absolute inset-0 -z-10 h-full w-full object-cover" />
-              <div className="absolute inset-0 -z-10 bg-gradient-to-t from-zinc-900 via-zinc-900/40" />
-              <h3 className="mt-3 text-lg font-semibold leading-6 text-white">
-                <a href="/events/1">
-                  <span className="absolute inset-0" />
-                  Summer Music Festival
-                </a>
-              </h3>
-              <div className="mt-3 flex flex-wrap items-center gap-y-1 overflow-hidden text-sm leading-6 text-zinc-300">
-                <time dateTime="2024-07-15">July 15, 2024</time>
-                <span className="mx-2">•</span>
-                Central Park, NY
-              </div>
-            </article>
-
-            {/* Event Card 2 */}
-            <article className="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl bg-zinc-900 px-8 pb-8 pt-40 sm:pt-48 lg:pt-64">
-              <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87" alt="Event 2" className="absolute inset-0 -z-10 h-full w-full object-cover" />
-              <div className="absolute inset-0 -z-10 bg-gradient-to-t from-zinc-900 via-zinc-900/40" />
-              <h3 className="mt-3 text-lg font-semibold leading-6 text-white">
-                <a href="/events/2">
-                  <span className="absolute inset-0" />
-                  Tech Conference 2024
-                </a>
-              </h3>
-              <div className="mt-3 flex flex-wrap items-center gap-y-1 overflow-hidden text-sm leading-6 text-zinc-300">
-                <time dateTime="2024-08-20">August 20, 2024</time>
-                <span className="mx-2">•</span>
-                Convention Center
-              </div>
-            </article>
-
-            {/* Event Card 3 */}
-            <article className="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl bg-zinc-900 px-8 pb-8 pt-40 sm:pt-48 lg:pt-64">
-              <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1" alt="Event 3" className="absolute inset-0 -z-10 h-full w-full object-cover" />
-              <div className="absolute inset-0 -z-10 bg-gradient-to-t from-zinc-900 via-zinc-900/40" />
-              <h3 className="mt-3 text-lg font-semibold leading-6 text-white">
-                <a href="/events/3">
-                  <span className="absolute inset-0" />
-                  Food & Wine Festival
-                </a>
-              </h3>
-              <div className="mt-3 flex flex-wrap items-center gap-y-1 overflow-hidden text-sm leading-6 text-zinc-300">
-                <time dateTime="2024-09-05">September 5, 2024</time>
-                <span className="mx-2">•</span>
-                Downtown Food District
-              </div>
-            </article>
+            {loading ? (
+              <p className="text-center col-span-3 text-gray-500">Loading events...</p>
+            ) : events.length > 0 ? (
+              events.map((event) => (
+                <article
+                  key={event.id}
+                  className="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl bg-zinc-900 px-8 pb-8 pt-40 sm:pt-48 lg:pt-64"
+                >
+                  <img
+                    src={event.photoUrl || event.image || "https://via.placeholder.com/600x400?text=No+Image"}
+                    alt={event.title || event.name}
+                    className="absolute inset-0 -z-10 h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 -z-10 bg-gradient-to-t from-zinc-900 via-zinc-900/40" />
+                  <h3 className="mt-3 text-lg font-semibold leading-6 text-white">
+                    <a href={`/events/${event.id}`}>
+                      <span className="absolute inset-0" />
+                      {event.title || event.name}
+                    </a>
+                  </h3>
+                  <div className="mt-3 flex flex-wrap items-center gap-y-1 overflow-hidden text-sm leading-6 text-zinc-300">
+                    <time dateTime={event.date ? event.date.split("T")[0] : ""}>
+                      {event.date ? new Date(event.date).toLocaleDateString(undefined, {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      }) : "Date TBA"}
+                    </time>
+                    <span className="mx-2">•</span>
+                    {event.location || "Location TBA"}
+                  </div>
+                </article>
+              ))
+            ) : (
+              <p className="text-center col-span-3 text-gray-500">No events found.</p>
+            )}
           </div>
         </div>
       </main>
       <Footer />
     </>
+    </SessionProviderWrapper>
   );
-} 
+}

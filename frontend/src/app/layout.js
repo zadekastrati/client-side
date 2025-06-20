@@ -1,15 +1,19 @@
 import './globals.css';
+import { Toaster } from 'react-hot-toast';
+import SessionProviderWrapper from './SessionProviderWrapper';
 
 export const metadata = {
-  title: 'Your Website',
-  description: 'A modern website built with Next.js and Tailwind CSS',
-};
-
+  title: 'Event Ticketing',
+  description: 'A website for event ticketing'
+}
 export default function RootLayout({ children }) {
-  return (
+ return (
     <html lang="en">
       <body>
-        {children}
+        <SessionProviderWrapper>
+          <Toaster position="top-center" />
+          {children}
+        </SessionProviderWrapper>
       </body>
     </html>
   );

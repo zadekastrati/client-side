@@ -1,8 +1,10 @@
 import express from 'express';
 import nodemailer from 'nodemailer';
 import { saveContact } from './model.js';
-import 'dotenv/config'; // nëse nuk e ke ngarkuar diku tjetër në backend-in tënd
+import dotenv from 'dotenv';
 
+// Load variables from .env.local
+dotenv.config({ path: '.env.local' });
 
 const router = express.Router();
 
@@ -22,10 +24,8 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    // 1. Ruaj kontaktin në DB
     await saveContact({ name, email, subject, message, createdAt: new Date() });
 
-    // 2. Email për adminin
     const mailToAdmin = {
       from: process.env.EMAIL_USER,
       to: process.env.ADMIN_EMAIL,
@@ -33,7 +33,6 @@ router.post('/', async (req, res) => {
       text: `Keni marrë një mesazh nga:\n\nEmri: ${name}\nEmail: ${email}\nSubjekti: ${subject}\nMesazhi:\n${message}`,
     };
 
-    // 3. Email për përdoruesin (konfirmim)
     const mailToUser = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -41,7 +40,6 @@ router.post('/', async (req, res) => {
       text: `Pershendetje ${name},\n\nFaleminderit për mesazhin tuaj me subjekt "${subject}".\nDo të merrni përgjigje së shpejti.\n\nMe respekt,\nEkipi i Suportit`,
     };
 
-    // 4. Dërgo emailet në mënyrë sekvenciale
     await transporter.sendMail(mailToAdmin);
     await transporter.sendMail(mailToUser);
 

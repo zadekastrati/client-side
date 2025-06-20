@@ -200,9 +200,11 @@ export default function About() {
                   }}
                 >
                   <img
-                    className="mx-auto h-24 w-24 rounded-full"
+                    className="mx-auto h-24 w-24 rounded-full object-cover"
                     src={person.image}
                     alt={person.name}
+                    width={256}
+                    height={256}
                   />
                   <h3 className="mt-6 text-base font-semibold leading-7 tracking-tight text-zinc-900">
                     {person.name}
